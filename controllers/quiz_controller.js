@@ -182,12 +182,11 @@ exports.randomplay = function(req, res, next){
 	req.session.ids_quizzes_acertados= new Array;
 	}
 	
-	req.session.score = req.session.ids_quizzes_acertados.length ;
+
 	
 	var quizzes = models.Quiz.findAll()
 	.then(function(quizzes){
-	   if (quizzes) {
-       				
+	   if (quizzes) {	
 		for (i in quizzes) {
 			for(j in req.session.ids_quizzes_acertados){
 				if(quizzes[i].id === req.session.ids_quizzes_acertados[j]){
@@ -208,7 +207,7 @@ exports.randomplay = function(req, res, next){
 		
 		res.render('quizzes/random_play', {
       	 	quiz: req.quiz,
-    		score: req.session.score
+    		score: req.session.ids_quizzes_acertados.length
     		});
 	})
     	.catch(function (error) {
@@ -228,29 +227,27 @@ exports.randomcheck = function (req, res, next) {
 		res.render('quizzes/random_result', {
    			 result: result,
       			 answer: answer,
-			 score: req.session.score
+			 score: 0 
   		  });
 		
 		
     }else{ 
-		req.session.score++;
 		req.session.ids_quizzes_acertados.push(req.quiz.id);
 		
     }
 	var cuenta = models.Quiz.count()
 	.then(function(cuenta){
-   		if( cuenta === req.session.score){
+   		if( cuenta === req.session.ids_quizzes_acertados.length){
 			req.session.ids_quizzes_acertados = new Array;	
 			res.render('quizzes/random_nomore',{
-			score: req.session.score
-			
+			score: cuenta
 			});
 			
 		} else{
       			 res.render('quizzes/random_result', {
    			 result: result,
       			 answer: answer,
-			score: req.session.score
+			score: req.session.ids_quizzes_acertados.length
   		  });
    		}
 	})
