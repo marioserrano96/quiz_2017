@@ -13,12 +13,12 @@ router.get('/author', function(req, res, next) {
     res.render('author');
 });
 
-<<<<<<< HEAD
+
 // Pagina de ayuda
 router.get('/help', function(req, res, next) {
    res.render('help');
 });
-=======
+
 // Pagina para jugar
 router.get('/quizzes/randomplay', quizController.randomplay);
 router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
@@ -42,6 +42,6 @@ router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 // Pagina para jugar de manera aleatoria
 router.get('/quizzes/randomplay', quizController.randomplay);
 router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
->>>>>>> practica52
+
 
 module.exports = router;
