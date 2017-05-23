@@ -173,6 +173,91 @@ exports.play = function (req, res, next) {
     });
 };
 
+// GET /quizzes/randomplay
+exports.randomplay = function(req, res, next){
+	var esta_acertado = false;
+
+	
+	if( !req.session.ids_quizzes_acertados ){
+	req.session.ids_quizzes_acertados= new Array;
+	}
+	
+	req.session.score = req.session.ids_quizzes_acertados.length ;
+	
+	var quizzes = models.Quiz.findAll()
+	.then(function(quizzes){
+	   if (quizzes) {
+       				
+		for (i in quizzes) {
+			for(j in req.session.ids_quizzes_acertados){
+				if(quizzes[i].id === req.session.ids_quizzes_acertados[j]){
+					esta_acertado = true;
+				}
+			}
+			if(!esta_acertado){
+				req.quiz= quizzes[i];
+			} 
+			esta_acertado = false;
+		}
+	   }else {
+		 throw new Error('No hay quizzes');
+		}	
+		
+	})
+	.then(function(quiz){
+		
+		res.render('quizzes/random_play', {
+      	 	quiz: req.quiz,
+    		score: req.session.score
+    		});
+	})
+    	.catch(function (error) {
+      		  next(error);
+   	 });
+	
+};
+// GET /quizzes/randomcheck/:quizId
+exports.randomcheck = function (req, res, next) {
+
+    var answer = req.query.answer || "";
+    	
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+    if (!result) {
+		req.session.ids_quizzes_acertados = new Array;
+		
+		res.render('quizzes/random_result', {
+   			 result: result,
+      			 answer: answer,
+			 score: req.session.score
+  		  });
+		
+		
+    }else{ 
+		req.session.score++;
+		req.session.ids_quizzes_acertados.push(req.quiz.id);
+		
+    }
+	var cuenta = models.Quiz.count()
+	.then(function(cuenta){
+   		if( cuenta === req.session.score){
+			req.session.ids_quizzes_acertados = new Array;	
+			res.render('quizzes/random_nomore',{
+			score: req.session.score
+			
+			});
+			
+		} else{
+      			 res.render('quizzes/random_result', {
+   			 result: result,
+      			 answer: answer,
+			score: req.session.score
+  		  });
+   		}
+	})
+	.catch(function (error) {
+      		  next(error);
+   	 });
+};
 
 // GET /quizzes/:quizId/check
 exports.check = function (req, res, next) {
