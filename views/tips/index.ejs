@@ -14,7 +14,7 @@
                 <%= tip.text %>
 		
 		<div class="right">
-    		<small><span id="autor">  tip.Author.username  </span></small>
+    		<small><span id="autor"> <%=tip.Author.username  %> </span></small>
 		</div>
 
                 <% if (!accepted && (isAdmin || isQuizAuthor)) { %>
