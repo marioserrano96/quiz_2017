@@ -257,6 +257,7 @@ exports.randomcheck = function (req, res, next) {
     	
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
     if (!result) {
+
 		req.session.ids_quizzes_acertados = new Array;
 		
 		res.render('quizzes/random_result', {
@@ -279,6 +280,7 @@ exports.randomcheck = function (req, res, next) {
 			});
 			
 		} else{
+		
       			 res.render('quizzes/random_result', {
    			 result: result,
       			 answer: answer,
